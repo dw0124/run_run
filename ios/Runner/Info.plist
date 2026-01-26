@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Run Run</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>run_run</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>앱이 백그라운드에 있거나 화면이 잠겨 있어도 중단 없이 러닝 경로와 거리를 정확하게 기록하고 운동 기록을 유지하기 위해 필요합니다.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>RunningSession</key>
+		<string>러닝 세션을 시작할 때, 정확한 GPS 경로 기록 및 거리를 측정하기 위해 일시적으로 정밀한 위치 접근이 필요합니다.</string>
+	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>앱을 사용하는 동안 사용자의 실시간 위치를 기반으로 러닝 경로 기록 및 페이스 계산을 제공합니다.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This app requires access to the barometer to provide altitude information.</string>
+    <key>NSHealthShareUsageDescription</key>
+    <string>사용자의 기존 러닝 기록(거리, 칼로리 등)을 불러와 분석 및 통합 관리에 사용합니다.</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>사용자의 새로운 러닝 기록(운동 시간, 이동 거리, 심박수 등)을 건강 앱에 저장하고 다른 건강 앱과 공유합니다.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+</dict>
+</plist>
