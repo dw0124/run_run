@@ -15,7 +15,7 @@ import 'package:run_run/domain/usecases/map_use_case.dart';
 import 'package:run_run/domain/usecases/pedometer_use_case.dart';
 import 'package:run_run/domain/usecases/workout_use_case.dart';
 import 'package:run_run/presentation/bloc/location_bloc.dart';
-import 'package:run_run/domain/usecases/location_tracking_use_case.dart';
+import 'package:run_run/domain/usecases/location_use_case.dart';
 import 'package:run_run/presentation/bloc/map_bloc.dart';
 import 'package:run_run/presentation/bloc/pedometer_bloc.dart';
 import 'package:run_run/presentation/bloc/workout_bloc.dart';
@@ -59,10 +59,10 @@ void main() async {
 
   final LocationFilter filter = LocationFilter();
 
-  final locationInitUseCase   = InitLocationTrackingUseCase(repository, filter);
-  final locationStartUseCase  = StartLocationTrackingUseCase(repository, filter);
-  final locationPauseUseCase  = PauseLocationTrackingUseCase(repository);
-  final locationCancelUseCase = CancelLocationTrackingUseCase(repository);
+  final locationInitUseCase   = GetLocationStreamUseCase(repository, filter);
+  final locationStartUseCase  = StartLocationUseCase(repository, filter);
+  final locationPauseUseCase  = PauseLocationUseCase(repository);
+  final locationCancelUseCase = CancelLocationUseCase(repository);
 
   final routeDataSource = TmapRoutesDataSource();
   final routeRepo = RouteRepoImpl(dataSource: routeDataSource);
@@ -72,7 +72,7 @@ void main() async {
   final pedometerDataSource = PedometerDataSource();
   final pedometerRepo = PedometerRepoImpl(dataSource: pedometerDataSource);
 
-  final pedometerInitUseCase = InitPedometerUseCase(pedometerRepo);
+  final pedometerInitUseCase = GetPedometerStreamUseCase(pedometerRepo);
   final pedometerStartUseCase = StartPedometerUseCase(pedometerRepo);
   final pedometerPauseUseCase = PausePedometerUseCase(pedometerRepo);
   final pedometerCancelUseCase = CancelPedometerUseCase(pedometerRepo);
@@ -81,7 +81,11 @@ void main() async {
   final workoutDataSource = HealthKitWorkoutDataSource();
   final workoutRepo = WorkoutRepoImpl(dataSource: workoutDataSource);
 
-  final workoutUseCase = WorkoutUseCase(workoutRepo, locationInitUseCase, pedometerInitUseCase);
+  final bindWorkoutDataUseCase = BindWorkoutDataUseCase(workoutRepo, locationInitUseCase, pedometerInitUseCase);
+  final startWorkoutUseCase = StartWorkoutUseCase(workoutRepo, locationStartUseCase, pedometerStartUseCase);
+  final pauseWorkoutUseCase = PauseWorkoutUseCase(locationPauseUseCase, pedometerPauseUseCase);
+  final cancelWorkoutUseCase = CancelWorkoutUseCase(locationCancelUseCase, pedometerCancelUseCase);
+  final saveWorkoutUseCase = SaveWorkoutUseCase(workoutRepo);
 
   runApp(
       MultiBlocProvider(
@@ -89,9 +93,6 @@ void main() async {
           BlocProvider(
             create: (_) => LocationBloc(
               initLocationTrackingUseCase: locationInitUseCase,
-              startLocationTrackingUseCase: locationStartUseCase,
-              pauseLocationTrackingUseCase: locationPauseUseCase,
-              cancelLocationTrackingUseCase: locationCancelUseCase,
             )
           ),
           BlocProvider(
@@ -102,13 +103,16 @@ void main() async {
           BlocProvider(
             create: (_) => PedometerBloc(
               initPedometerUseCase: pedometerInitUseCase,
-              startPedometerUseCase: pedometerStartUseCase,
-              pausePedometerUseCase: pedometerPauseUseCase,
-              cancelPedometerUseCase: pedometerCancelUseCase,
             )
           ),
           BlocProvider(
-              create: (_) => WorkoutBloc(workoutUseCase: workoutUseCase)
+              create: (_) => WorkoutBloc(
+                  startWorkoutUseCase: startWorkoutUseCase,
+                  pauseWorkoutUseCase: pauseWorkoutUseCase,
+                  cancelWorkoutUseCase: cancelWorkoutUseCase,
+                  saveWorkoutUseCase: saveWorkoutUseCase,
+                  bindWorkoutDataUseCase: bindWorkoutDataUseCase
+              )
           ),
 
         ],

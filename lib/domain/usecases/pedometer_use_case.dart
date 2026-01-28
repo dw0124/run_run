@@ -1,33 +1,52 @@
 import 'package:run_run/data/repositories/pedometer_repo_impl.dart';
 import 'package:run_run/domain/entities/pedometer.dart';
-import 'package:run_run/domain/usecases/workout_use_case.dart';
 
-class StartPedometerUseCase {
+abstract class StartPedometerPort {
+  Future<void> call();
+}
+
+abstract class PausePedometerPort {
+  void call();
+}
+
+abstract class CancelPedometerPort {
+  Future<void> call();
+}
+
+abstract class GetPedometerStreamPort {
+  Stream<Pedometer> get pedometerStream;
+}
+
+
+class StartPedometerUseCase implements StartPedometerPort {
   StartPedometerUseCase(this._repo);
 
   final PedometerRepoImpl _repo;
 
+  @override
   Future<void> call() async => await _repo.start();
 }
 
-class PausePedometerUseCase {
+class PausePedometerUseCase implements PausePedometerPort {
   PausePedometerUseCase(this._repo);
 
   final PedometerRepoImpl _repo;
 
+  @override
   Future<void> call() async => await _repo.cancel();
 }
 
-class CancelPedometerUseCase {
+class CancelPedometerUseCase implements CancelPedometerPort {
   CancelPedometerUseCase(this._repo);
 
   final PedometerRepoImpl _repo;
 
+  @override
   Future<void> call() async => await _repo.cancel();
 }
 
-class InitPedometerUseCase implements PedometerPort {
-  InitPedometerUseCase(this._repo)
+class GetPedometerStreamUseCase implements GetPedometerStreamPort {
+  GetPedometerStreamUseCase(this._repo)
       : _stream = _repo.pedometerStream;
 
   final PedometerRepoImpl _repo;

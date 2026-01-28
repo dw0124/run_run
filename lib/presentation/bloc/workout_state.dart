@@ -4,6 +4,7 @@ enum WorkoutStatus {
   initial,
   running,
   paused,
+  canceled,
 }
 
 class WorkoutState extends Equatable {

@@ -39,14 +39,14 @@ class _MapPageState extends State<MapPage> {
         listeners: [
 
           // Location Status Event - Map Status Event
-          BlocListener<LocationBloc, LocationState>(
+          BlocListener<WorkoutBloc, WorkoutState>(
             listenWhen: (previous, current) {
               return previous.status != current.status;
             },
-            listener: (context, locationState) {
-              if(locationState.status == LocationStatus.tracking) {
+            listener: (context, workoutState) {
+              if(workoutState.status == WorkoutStatus.running) {
                 context.read<MapBloc>().add(MapTrackingStatusChangedEvent(true));
-              } else if(locationState.status == LocationStatus.paused) {
+              } else if(workoutState.status == WorkoutStatus.paused) {
                 context.read<MapBloc>().add(MapTrackingStatusChangedEvent(false));
               }
             }
@@ -153,13 +153,13 @@ class _MapPageState extends State<MapPage> {
                       children: [
                         ElevatedButton(onPressed: () {
                           context.read<WorkoutBloc>().add(WorkoutStartEvent());
-                          context.read<LocationBloc>().add(LocationTrackingStartEvent());
-                          context.read<PedometerBloc>().add(PedometerStartEvent());
+                          // context.read<LocationBloc>().add(LocationTrackingStartEvent());
+                          // context.read<PedometerBloc>().add(PedometerStartEvent());
                         }, child: Text('Tracking Start')),
                         ElevatedButton(onPressed: () {
                           context.read<WorkoutBloc>().add(WorkoutPauseEvent());
-                          context.read<LocationBloc>().add(LocationTrackingPauseEvent());
-                          context.read<PedometerBloc>().add(PedometerPauseEvent());
+                          // context.read<LocationBloc>().add(LocationTrackingPauseEvent());
+                          // context.read<PedometerBloc>().add(PedometerPauseEvent());
                         }, child: Text('Tracking Pause')),
                         IconButton(onPressed: () {
                           showModalBottomSheet(
