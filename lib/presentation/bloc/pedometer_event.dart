@@ -9,6 +9,6 @@ final class PedometerPauseEvent extends PedometerEvent {}
 final class PedometerCancelEvent extends PedometerEvent {}
 
 final class _PedometerUpdatedEvent extends PedometerEvent {
-  const _PedometerUpdatedEvent({required this.pedometer});
-  final Pedometer pedometer;
+  const _PedometerUpdatedEvent({required this.pedometerDelta});
+  final PedometerDelta pedometerDelta;
 }

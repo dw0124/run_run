@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:run_run/domain/entities/pedometer.dart';
+import 'package:run_run/domain/entities/pedometer_delta.dart';
 import 'package:run_run/domain/usecases/pedometer_use_case.dart';
 
 part 'pedometer_event.dart';
@@ -12,11 +12,11 @@ class PedometerBloc extends Bloc<PedometerEvent, PedometerState> {
   PedometerBloc({
     required this.initPedometerUseCase
   }):
-    _pedometerStream = initPedometerUseCase.call(),
+    _pedometerDeltaStream = initPedometerUseCase.call(),
     super(PedometerState())
   {
-    subscription = _pedometerStream.listen((pedometer) {
-      add(_PedometerUpdatedEvent(pedometer: pedometer));
+    subscription = _pedometerDeltaStream.listen((pedometerDelta) {
+      add(_PedometerUpdatedEvent(pedometerDelta: pedometerDelta));
     });
 
     on<_PedometerUpdatedEvent>((event, emit) => _onPedometerUpdated(event, emit));
@@ -24,15 +24,20 @@ class PedometerBloc extends Bloc<PedometerEvent, PedometerState> {
 
   final GetPedometerStreamUseCase initPedometerUseCase;
 
-  final Stream<Pedometer> _pedometerStream;
+  final Stream<PedometerDelta> _pedometerDeltaStream;
   StreamSubscription? subscription;
 
   /// 스트림을 통해 들어오는 pedometer로 state를 업데이트
   void _onPedometerUpdated(_PedometerUpdatedEvent event, Emitter<PedometerState> emit) {
+    final delta = event.pedometerDelta;
+
     final updatedState = state.copyWith(
-        status: PedometerStatus.tracking,
-        pedometerList: [...state.pedometerList, event.pedometer]
+      totalSteps: state.totalSteps + delta.stepDelta,
+      totalDistance: state.totalDistance + delta.distanceDelta,
+      currentPace: delta.currentPace ?? state.currentPace,
+      currentCadence: delta.currentCadence ?? state.currentCadence,
     );
+
     emit(updatedState);
   }
 

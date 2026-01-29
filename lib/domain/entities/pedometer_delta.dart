@@ -1,4 +1,7 @@
 class PedometerDelta {
+  final String startDate;
+  final String endDate;
+
   // 이번에 추가된 걸음 수 => 현재 누적 걸음수 - 이전 누적 걸음수
   final int stepDelta;
 
@@ -8,22 +11,24 @@ class PedometerDelta {
 
   final double? currentPace;
   final double? currentCadence;
-  final DateTime timestamp;     //  데이터 발생 시점 - PedometerData endDate
 
   PedometerDelta({
+    required this.startDate,
+    required this.endDate,
     required this.stepDelta,
     required this.distanceDelta,
     this.currentPace,
     this.currentCadence,
-    required this.timestamp,
   });
 
-  @override
-  String toString() {
-    return 'PedometerDelta('
-        'stepDelta: $stepDelta,'
-        ' distanceDelta: ${distanceDelta.toStringAsFixed(2)},'
-        ' timestamp: $timestamp'
-        ')';
+  Map<String, dynamic> toJson() {
+    return {
+      'startDate': startDate,
+      'endDate': endDate,
+      'stepDelta': stepDelta,
+      'distanceDelta': distanceDelta,
+      'currentPace': currentPace,
+      'currentCadence': currentCadence,
+    };
   }
 }

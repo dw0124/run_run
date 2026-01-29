@@ -1,52 +1,37 @@
 part of 'pedometer_bloc.dart';
 
-enum PedometerStatus {
-  initial,
-  tracking,
-  paused,
-  canceled,
-  error,
-}
-
 class PedometerState extends Equatable {
-
   const PedometerState({
-    this.status = PedometerStatus.initial,
-    this.pedometerList = const [],
+    this.totalSteps = 0,
+    this.totalDistance = 0,
+    this.currentPace,
+    this.currentCadence,
   });
 
-  final PedometerStatus status;
-  final List<Pedometer> pedometerList;
+  final int totalSteps;         // 누적 걸음수
+  final double totalDistance;   // 누적 거리
+  final double? currentPace;    // Pedometer의 currentPace
+  final double? currentCadence; // Pedometer의 currentCadence
 
   PedometerState copyWith({
-    PedometerStatus? status,
-    List<Pedometer>? pedometerList,
+    int? totalSteps,
+    double? totalDistance,
+    double? currentPace,
+    double? currentCadence,
   }) {
     return PedometerState(
-      status: status ?? this.status,
-      pedometerList: pedometerList ?? this.pedometerList,
+      totalSteps: totalSteps ?? this.totalSteps,
+      totalDistance: totalDistance ?? this.totalDistance,
+      currentPace: currentPace ?? this.currentPace,
+      currentCadence: currentCadence ?? this.currentCadence,
     );
   }
 
   @override
-  List<Object?> get props => [status, pedometerList];
+  List<Object?> get props => [
+    totalSteps,
+    totalDistance,
+    currentPace,
+    currentCadence
+  ];
 }
-
-// class PedometerState1 extends Equatable {
-//   PedometerState1();
-//
-//   final double previousDistance = 0;  // 이전까지 완료된 누적 거리
-//   final double currentDistance = 0;   // 현재 스트림으로 들어오고 있는 거리
-//
-//   double get totalDistance => previousDistance + currentDistance; // UI로 표시될 총 거리
-//
-//   final double? currentPace;    // Pedometer의 currentPace
-//   final double? currentCadence; // Pedometer의 currentCadence
-//
-//   final double? averageActivePace;
-//
-//   @override
-//   List<Object?> get props => [];
-//
-//
-// }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:run_run/domain/entities/location.dart';
-import 'package:run_run/domain/entities/pedometer.dart';
+import 'package:run_run/domain/entities/pedometer_delta.dart';
 import 'package:run_run/domain/repositories/workout_repository.dart';
 import 'package:run_run/domain/usecases/location_use_case.dart';
 import 'package:run_run/domain/usecases/pedometer_use_case.dart';
@@ -13,24 +13,24 @@ class BindWorkoutDataUseCase {
 
   // Location, Pedometer UseCase를 연결하는 Port
   final GetLocationStreamPort _locationPort;
-  final GetPedometerStreamPort _pedometerPort;
+  final GetPedometerDeltaStreamPort _pedometerPort;
 
   // Port로 전달 받은 스트림 구독
   StreamSubscription<Location>? _locationSub;
-  StreamSubscription<Pedometer>? _pedometerSub;
+  StreamSubscription<PedometerDelta>? _pedometerDeltaSub;
 
   void call() {
     // 중복 구독 방지
-    if (_locationSub != null || _pedometerSub != null) return;
+    if (_locationSub != null || _pedometerDeltaSub != null) return;
     _locationSub = _locationPort.locationStream.listen(_repo.saveLocation);
-    _pedometerSub = _pedometerPort.pedometerStream.listen(_repo.savePedometer);
+    _pedometerDeltaSub = _pedometerPort.pedometerDeltaStream.listen(_repo.savePedometerDelta);
   }
 
   Future<void> dispose() async {
     await _locationSub?.cancel();
-    await _pedometerSub?.cancel();
+    await _pedometerDeltaSub?.cancel();
     _locationSub = null;
-    _pedometerSub = null;
+    _pedometerDeltaSub = null;
   }
 }
 

@@ -1,7 +1,7 @@
-import 'package:run_run/domain/entities/pedometer.dart';
+import 'package:run_run/domain/entities/pedometer_delta.dart';
 
 abstract class PedometerRepo {
-  Stream<Pedometer> get pedometerStream;
+  Stream<PedometerDelta> get pedometerDeltaStream;
 
   void start();
   void pause();
