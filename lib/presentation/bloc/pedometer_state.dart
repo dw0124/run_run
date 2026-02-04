@@ -16,14 +16,18 @@ class PedometerState extends Equatable {
   PedometerState copyWith({
     int? totalSteps,
     double? totalDistance,
-    double? currentPace,
-    double? currentCadence,
+    Object? currentPace = _undefined,
+    Object? currentCadence = _undefined,
   }) {
     return PedometerState(
       totalSteps: totalSteps ?? this.totalSteps,
       totalDistance: totalDistance ?? this.totalDistance,
-      currentPace: currentPace ?? this.currentPace,
-      currentCadence: currentCadence ?? this.currentCadence,
+      currentPace: currentPace == _undefined
+          ? this.currentPace
+          : currentPace as double?,
+      currentCadence: currentCadence == _undefined
+          ? this.currentCadence
+          : currentCadence as double?,
     );
   }
 
@@ -35,3 +39,4 @@ class PedometerState extends Equatable {
     currentCadence
   ];
 }
+const _undefined = Object();

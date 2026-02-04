@@ -34,8 +34,8 @@ class PedometerBloc extends Bloc<PedometerEvent, PedometerState> {
     final updatedState = state.copyWith(
       totalSteps: state.totalSteps + delta.stepDelta,
       totalDistance: state.totalDistance + delta.distanceDelta,
-      currentPace: delta.currentPace ?? state.currentPace,
-      currentCadence: delta.currentCadence ?? state.currentCadence,
+      currentPace: delta.currentPace,
+      currentCadence: delta.currentCadence,
     );
 
     emit(updatedState);
