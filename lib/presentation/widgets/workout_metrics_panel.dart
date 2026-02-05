@@ -151,7 +151,7 @@ class _CurrentPaceAndCadenceMetric extends StatelessWidget {
               builder: (context, cadence) {
                 return _MetricItem(
                   label: '현재 케이던스',
-                  value: (cadence != null) ? '${cadence.toInt()} spm' : '-- spm',
+                  value: WorkoutFormatter.formatCurrentCadence(cadence),
                   isActive: isActive,
                 );
               },

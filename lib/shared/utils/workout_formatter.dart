@@ -27,4 +27,14 @@ class WorkoutFormatter {
 
     return "$minutes'${seconds.toString().padLeft(2, '0')}\"";
   }
+
+  // 현재 케이던스 계산 (초당 걸음수 -> 분당 걸음수)
+  static String formatCurrentCadence(double? stepsPerSecond) {
+    if (stepsPerSecond == null || stepsPerSecond <= 0) return '-- spm';
+
+    // 초당 걸음 수를 분당 걸음 수로 변환
+    final spm = (stepsPerSecond * 60).round();
+
+    return '$spm spm';
+  }
 }
