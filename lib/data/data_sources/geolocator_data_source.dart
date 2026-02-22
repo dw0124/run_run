@@ -20,7 +20,7 @@ class GeoLocatorDataSource implements LocationDataSource {
   GeoLocatorDataSource() {
     if (defaultTargetPlatform == TargetPlatform.android) {
       _locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.high,
+          accuracy: LocationAccuracy.bestForNavigation,
           forceLocationManager: true,
           intervalDuration: const Duration(seconds: 5),
           //(Optional) Set foreground notification config to keep the app alive
@@ -34,7 +34,7 @@ class GeoLocatorDataSource implements LocationDataSource {
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
       _locationSettings = AppleSettings(
-        accuracy: LocationAccuracy.high,
+        accuracy: LocationAccuracy.bestForNavigation,
         activityType: ActivityType.fitness,
         distanceFilter: 5,
         pauseLocationUpdatesAutomatically: false,
@@ -60,6 +60,7 @@ class GeoLocatorDataSource implements LocationDataSource {
 
     // Geolocator 스트림 구독하고 _controller에 전달
     _subscription = Geolocator.getPositionStream(locationSettings: _locationSettings).listen((position) {
+      print("${position.timestamp}: ${position.longitude}, ${position.latitude}");
       _controller.add(position);
     });
   }
