@@ -21,6 +21,9 @@ class _WorkoutMapState extends State<WorkoutMap> {
         _userPathOverlayListener(),   // 유저 경로 표시
       ],
       child: NaverMap(
+        options: NaverMapViewOptions(
+          locationButtonEnable: true
+        ),
         onMapReady: (controller) {
           _mapController = controller;
 
