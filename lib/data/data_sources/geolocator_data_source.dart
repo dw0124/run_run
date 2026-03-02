@@ -10,7 +10,7 @@ abstract class LocationDataSource {
   LocationDataSource();
 
   Future<void> start();
-  void pause();
+  Future<void> pause();
   Future<void> cancel();
   void dispose();
 }
@@ -60,13 +60,20 @@ class GeoLocatorDataSource implements LocationDataSource {
 
     // Geolocator 스트림 구독하고 _controller에 전달
     _subscription = Geolocator.getPositionStream(locationSettings: _locationSettings).listen((position) {
-      print("${position.timestamp}: ${position.longitude}, ${position.latitude}");
       _controller.add(position);
     });
   }
 
   @override
-  void pause() {
+  Future<void> pause() async {
+    // 현재 좌표를 스트림으로 전달하고 정지
+    final currentPosition = await Geolocator.getCurrentPosition(locationSettings: _locationSettings);
+    _controller.add(currentPosition);
+
+    // _controller.add(...)는 sync로 실행 되지만
+    // Listner에 전달하는게 microtask로 실행되기 때문에 사용
+    await Future.microtask(() {});
+
     _subscription?.pause();
   }
 
