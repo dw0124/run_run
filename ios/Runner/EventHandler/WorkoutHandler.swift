@@ -132,7 +132,10 @@ class WorkoutHandler {
         do {
             try await builder.endCollection(at: endDate)
             guard let workout = try await builder.finishWorkout() else { return }
-            try await routeBuilder.finishRoute(with: workout, metadata: nil)
+            // HKWorkoutRouteBuilder는 HKWorkoutBuilder를 정리할 때 알아서 정리됨
+            
+            // workoutBuilder, workoutRouteBuilder를 nil로 초기화
+            resetWorkoutBuilder()
         } catch {
             print("Finish workout error: \(error.localizedDescription)")
         }
