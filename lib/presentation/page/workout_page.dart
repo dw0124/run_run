@@ -27,6 +27,7 @@ class _WorkoutState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF6F7F9),
       body: MultiBlocListener(
         listeners: [
           _workoutStatusListener(),     // Workout Status 변화 감지 - MapBloc 전달
