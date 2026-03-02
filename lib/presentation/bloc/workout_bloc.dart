@@ -58,7 +58,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
   Future<void> _onPause(WorkoutPauseEvent event, Emitter<WorkoutState> emit) async {
     _timer?.cancel();
 
-    _pauseWorkoutUseCase.call();
+    await _pauseWorkoutUseCase.call();
 
     emit(state.copyWith(status: WorkoutStatus.paused));
   }
