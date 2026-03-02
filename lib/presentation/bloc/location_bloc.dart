@@ -30,10 +30,23 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
 
   /// 스트림을 통해 들어오는 location으로 state를 업데이트 합니다
   void _onLocationUpdated(_LocationUpdatedEvent event, Emitter<LocationState> emit) {
-    final updatedState = state.copyWith(
+    final location = event.location;
+    final distanceDelta = location.distanceDelta;
+
+    // distanceDelta가 null이면 거리 누적 없이 위치만 업데이트
+    if (distanceDelta == null) {
+      emit(state.copyWith(
+        status: LocationStatus.tracking,
+        location: location,
+      ));
+      return;
+    }
+
+    // distanceDelta가 존재할 때만 총 거리 업데이트
+    emit(state.copyWith(
       status: LocationStatus.tracking,
-      location: event.location
-    );
-    emit(updatedState);
+      location: location,
+      totalDistance: state.totalDistance + distanceDelta,
+    ));
   }
 }
