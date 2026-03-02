@@ -24,18 +24,7 @@ class WorkoutHandler {
     
     private let device: HKDevice? = .local()
     
-    init() {
-        // HKWorkoutBuilder 생성
-        let builder = HKWorkoutBuilder(
-            healthStore: healthStore,
-            configuration: workoutConfiguration,
-            device: device
-        )
-        self.workoutBuilder = builder
-
-        // HKWorkoutRouteBuilder 생성
-        self.workoutRouteBuilder = builder.seriesBuilder(for: HKSeriesType.workoutRoute()) as? HKWorkoutRouteBuilder
-    }
+    init() {}
     
     // HealthKit 권한 요청
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
@@ -62,6 +51,24 @@ class WorkoutHandler {
     
     /// HKWorkoutBuilder 데이터 수집 시작
     func startWorkout(startDate: Date) async {
+        
+        // 현재 HKWorkoutBuilder가 존재(운동이 진행 or 정지 상태)하면 resumeWorkout 실행
+        if workoutBuilder?.startDate != nil {
+            await resumeWorkout()
+            return
+        }
+        
+        // HKWorkoutBuilder 생성
+        let builder = HKWorkoutBuilder(
+            healthStore: healthStore,
+            configuration: workoutConfiguration,
+            device: device
+        )
+        self.workoutBuilder = builder
+
+        // HKWorkoutRouteBuilder 생성
+        self.workoutRouteBuilder = builder.seriesBuilder(for: HKSeriesType.workoutRoute()) as? HKWorkoutRouteBuilder
+        
         do {
             try await workoutBuilder?.beginCollection(at: startDate)
         } catch {
