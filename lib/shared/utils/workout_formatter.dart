@@ -13,7 +13,7 @@ class WorkoutFormatter {
 
   // 현재 페이스 계산
   static String formatCurrentPace(double? secondsPerMeter) {
-    print("formatCurrentPace $secondsPerMeter");
+    //print("formatCurrentPace $secondsPerMeter");
 
     if (secondsPerMeter == null || secondsPerMeter <= 0) return "-'--\"";
     final double secondsPerKm = secondsPerMeter * 1000;
