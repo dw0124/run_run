@@ -58,6 +58,20 @@ class WorkoutRepoImpl implements WorkoutRepository {
     }
   }
 
+  @override
+  Future<void> startWorkout() async {
+    await _dataSource.startWorkout();
+  }
+
+  @override
+  Future<void> pauseWorkout() async {
+    await _dataSource.pauseWorkout();
+  }
+
+  @override
+  Future<void> finishWorkout() async {
+    await _dataSource.finishWorkout();
+  }
 
   @override
   void resetState() {
