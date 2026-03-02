@@ -18,8 +18,17 @@ class WorkoutRepoImpl implements WorkoutRepository {
   /// UseCase에서 _positionBuffer에 추가하는 함수
   @override
   void saveLocation(Location location) {
+    final previousTimestamp = location.previousTimestamp?.millisecondsSinceEpoch;
+    final distanceDelta = location.distanceDelta;
     final position = LocationMapper(location).toPosition();
-    final data = position.toJson();
+    final positionData = position.toJson();
+
+    final Map<String, dynamic> data = {
+      "previousTimestamp": previousTimestamp,
+      "distanceDelta": distanceDelta,
+      "position": positionData
+    };
+
     _positionBuffer.add(data);
   }
 
