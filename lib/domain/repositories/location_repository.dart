@@ -4,7 +4,7 @@ abstract class LocationRepository {
   Stream<Location> get locationStream;
 
   Future<void> start();
-  void pause();
+  Future<void> pause();
   Future<void> cancel();
   void dispose();
 
