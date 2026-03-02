@@ -7,7 +7,7 @@ abstract class StartLocationPort {
 }
 
 abstract class PauseLocationPort {
-  void call();
+  Future<void> call();
 }
 
 abstract class CancelLocationPort {
@@ -37,8 +37,8 @@ class PauseLocationUseCase implements PauseLocationPort {
   final LocationRepository _repo;
 
   @override
-  void call() {
-    _repo.pause();
+  Future<void> call() async {
+    await _repo.pause();
   }
 }
 
