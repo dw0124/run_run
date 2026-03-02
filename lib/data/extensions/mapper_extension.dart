@@ -7,7 +7,10 @@ import 'package:run_run/domain/entities/route.dart';
 
 /// Position to Location
 extension PositionMapper on Position {
-  Location toLocation() {
+  Location toLocation({
+    double? distanceDelta,
+    DateTime? previousTimestamp
+  }) {
     return Location(
       latitude: latitude,
       longitude: longitude,
@@ -19,6 +22,8 @@ extension PositionMapper on Position {
       headingAccuracy: headingAccuracy,
       speed: speed,
       speedAccuracy: speedAccuracy,
+      previousTimestamp: previousTimestamp,
+      distanceDelta: distanceDelta,
     );
   }
 }
