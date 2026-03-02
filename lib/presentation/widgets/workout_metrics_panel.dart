@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:run_run/presentation/bloc/location_bloc.dart';
 import 'package:run_run/presentation/bloc/pedometer_bloc.dart';
 import 'package:run_run/presentation/bloc/workout_bloc.dart';
 
@@ -69,7 +70,7 @@ class _DistanceAndAveragePaceMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final distance = context.select((PedometerBloc bloc) => bloc.state.totalDistance);
+    final distance = context.select((LocationBloc bloc) => bloc.state.totalDistance);
     final seconds = context.select((WorkoutBloc bloc) => bloc.state.elapsedSeconds);
 
     return Container(
