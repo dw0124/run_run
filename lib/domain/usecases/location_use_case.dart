@@ -55,13 +55,9 @@ class CancelLocationUseCase implements CancelLocationPort {
 
 class GetLocationStreamUseCase implements GetLocationStreamPort {
   GetLocationStreamUseCase(LocationRepository repo, LocationFilter filter)
-    : _stream = repo.locationStream
-      // 이상치(Outlier)인 경우 걸러냄
-      .where((location) => !filter.isOutlier(location))
-      // 이상치(Outlier)가 아닌 경우 필터 적용
-      .map((location) => filter.apply(location));
+    : _stream = repo.locationStream;
 
-  /// 필터링 된 위치 스트림
+  /// 위치 스트림
   final Stream<Location> _stream;
 
   /// LocationBloc에서 사용하는 진입점
