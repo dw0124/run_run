@@ -70,6 +70,26 @@ class WorkoutHandler {
         
     }
     
+    func resumeWorkout() async {
+        let resumeEvent = HKWorkoutEvent(type: .resume, dateInterval: DateInterval(start: Date(), duration: 0), metadata: nil)
+        
+        do {
+            try await workoutBuilder?.addWorkoutEvents([resumeEvent])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func pauseWorkout() async {
+        let pauseEvent = HKWorkoutEvent(type: .pause, dateInterval: DateInterval(start: Date(), duration: 0), metadata: nil)
+        
+        do {
+            try await workoutBuilder?.addWorkoutEvents([pauseEvent])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     /// HKWorkoutBuilder에 [HKSample] 추가
     func add(samples: [HKSample]) {
         guard let builder = workoutBuilder else { return }
