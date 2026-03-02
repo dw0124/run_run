@@ -14,6 +14,8 @@ class Location extends Equatable {
     required this.speed,
     required this.speedAccuracy,
     this.floor,
+    this.previousTimestamp,
+    this.distanceDelta,
   });
 
   final double latitude;
@@ -28,6 +30,10 @@ class Location extends Equatable {
   final double speed;
   final double speedAccuracy;
 
+  // 이전 좌표와 비교를 위한 속성
+  final DateTime? previousTimestamp;  // 이전 좌표의 timestamp
+  final double? distanceDelta;  // 이전 좌표와 현재 좌표 사이 거리
+
   Location copyWith({
     double? latitude,
     double? longitude,
@@ -40,6 +46,8 @@ class Location extends Equatable {
     int? floor,
     double? speed,
     double? speedAccuracy,
+    DateTime? previousTimestamp,
+    double? distanceDelta,
   }) {
     return Location(
       latitude: latitude ?? this.latitude,
@@ -53,6 +61,8 @@ class Location extends Equatable {
       floor: floor ?? this.floor,
       speed: speed ?? this.speed,
       speedAccuracy: speedAccuracy ?? this.speedAccuracy,
+      previousTimestamp: previousTimestamp ?? this.previousTimestamp,
+      distanceDelta: distanceDelta ?? this.distanceDelta,
     );
   }
 
@@ -69,5 +79,7 @@ class Location extends Equatable {
     floor,
     speed,
     speedAccuracy,
+    previousTimestamp,
+    distanceDelta,
   ];
 }
