@@ -31,14 +31,19 @@ class WorkoutHandler {
         // 워크아웃을 읽고 쓰기 위해 필요한 데이터 타입
         let readTypes: Set<HKObjectType> = [
             .workoutType(),
+            HKSeriesType.workoutRoute(),    // HKWorkoutRoute 관련 권한
             HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!, // 거리 기록 권한
+            //HKObjectType.quantityType(forIdentifier: .runningSpeed)!, // Running Speed - 현재 페이스 대용 => 확인해본 결과 대부분 distanceWalkingRunning를 사용
             HKObjectType.quantityType(forIdentifier: .stepCount)!, // 걸음 수 기록 권한
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)! // 칼로리 기록 권한
         ]
         
         let writeTypes: Set<HKSampleType> = [
+            HKObjectType.quantityType(forIdentifier: .runningSpeed)!,
             .workoutType(), // HKWorkout 권한
+            HKSeriesType.workoutRoute(),    // HKWorkoutRoute 관련 권한
             HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!, // 거리 기록 권한
+            //HKObjectType.quantityType(forIdentifier: .runningSpeed)!, // Running Speed - 현재 페이스 대용
             HKObjectType.quantityType(forIdentifier: .stepCount)!, // 걸음 수 기록 권한
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)! // 칼로리 기록 권한
         ]
