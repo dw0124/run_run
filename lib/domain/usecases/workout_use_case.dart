@@ -46,30 +46,40 @@ class StartWorkoutUseCase {
     // WorkoutRepository - Pedometer delta 계산용 누적 상태 초기화
     _repo.resetState();
 
-    await _locationPort.call();
-    await _pedometerPort.call();
+    await _repo.startWorkout();
+
+    await Future.wait([
+      _locationPort.call(),
+      _pedometerPort.call()
+    ]);
   }
 }
 
 class PauseWorkoutUseCase {
-  PauseWorkoutUseCase(this._locationPort, this._pedometerPort);
+  PauseWorkoutUseCase(this._repo, this._locationPort, this._pedometerPort);
 
+  final WorkoutRepository _repo;
   final PauseLocationPort _locationPort;
   final PausePedometerPort _pedometerPort;
 
-  void call() {
-    _locationPort.call();
+  Future<void> call() async {
+    await _repo.pauseWorkout();
+
+    await _locationPort.call();
     _pedometerPort.call();
   }
 }
 
 class CancelWorkoutUseCase {
-  CancelWorkoutUseCase(this._locationPort, this._pedometerPort);
+  CancelWorkoutUseCase(this._repo, this._locationPort, this._pedometerPort);
 
+  final WorkoutRepository _repo;
   final CancelLocationPort _locationPort;
   final CancelPedometerPort _pedometerPort;
 
   Future<void> call() async {
+    await _repo.finishWorkout();
+
     await _locationPort.call();
     await _pedometerPort.call();
   }
