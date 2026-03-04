@@ -127,7 +127,7 @@ class _CurrentPaceAndCadenceMetric extends StatelessWidget {
         children: [
           // 현재 페이스
           Expanded(
-            child: BlocSelector<PedometerBloc, PedometerState, double?>(
+            child: BlocSelector<LocationBloc, LocationState, double?>(
               selector: (state) => state.currentPace,
               builder: (context, pace) {
                 return _MetricItem(
