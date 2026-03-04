@@ -54,15 +54,10 @@ class LocationTrackingRepoImpl implements LocationRepository {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     _dataSource.dispose();
     _reset();
     _streamController.close();
-  }
-
-  @override
-  void save(Location location) {
-
   }
 
   /// 좌표의 이상치를 필터링하고 거리를 계산하여 Location 엔티티로 변환

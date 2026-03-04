@@ -6,8 +6,5 @@ abstract class LocationRepository {
   Future<void> start();
   Future<void> pause();
   Future<void> cancel();
-  void dispose();
-
-  // HealthKit에 저장할 데이터를 버퍼에 추가하는 메소드
-  void save(Location location);
+  Future<void> dispose();
 }
