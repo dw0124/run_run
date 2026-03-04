@@ -93,7 +93,7 @@ class PedometerRepoImpl implements PedometerRepo {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     _reset();
     _deltaStreamController.close();
     _dataSource.dispose();
