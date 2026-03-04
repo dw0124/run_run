@@ -1,5 +1,5 @@
-import 'package:run_run/data/repositories/pedometer_repo_impl.dart';
 import 'package:run_run/domain/entities/pedometer_delta.dart';
+import 'package:run_run/domain/repositories/pedometer_repository.dart';
 
 abstract class StartPedometerPort {
   Future<void> call();
@@ -21,7 +21,7 @@ abstract class GetPedometerDeltaStreamPort {
 class StartPedometerUseCase implements StartPedometerPort {
   StartPedometerUseCase(this._repo);
 
-  final PedometerRepoImpl _repo;
+  final PedometerRepo _repo;
 
   @override
   Future<void> call() async => await _repo.start();
@@ -30,7 +30,7 @@ class StartPedometerUseCase implements StartPedometerPort {
 class PausePedometerUseCase implements PausePedometerPort {
   PausePedometerUseCase(this._repo);
 
-  final PedometerRepoImpl _repo;
+  final PedometerRepo _repo;
 
   @override
   Future<void> call() async => await _repo.cancel();
@@ -39,7 +39,7 @@ class PausePedometerUseCase implements PausePedometerPort {
 class CancelPedometerUseCase implements CancelPedometerPort {
   CancelPedometerUseCase(this._repo);
 
-  final PedometerRepoImpl _repo;
+  final PedometerRepo _repo;
 
   @override
   Future<void> call() async => await _repo.cancel();
@@ -49,7 +49,7 @@ class GetPedometerStreamUseCase implements GetPedometerDeltaStreamPort {
   GetPedometerStreamUseCase(this._repo)
       : _stream = _repo.pedometerDeltaStream;
 
-  final PedometerRepoImpl _repo;
+  final PedometerRepo _repo;
   final Stream<PedometerDelta> _stream;
 
   /// PedometerBloc에서 사용하는 진입점
