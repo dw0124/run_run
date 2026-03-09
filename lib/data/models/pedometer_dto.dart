@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'pedometer_dto.g.dart';
 
 /// iOS - PedometerData DTO
 @JsonSerializable()
-class PedometerDTO {
+class PedometerDTO extends Equatable  {
   final String startDate;
   final String endDate;
 
@@ -33,4 +34,17 @@ class PedometerDTO {
   factory PedometerDTO.fromJson(Map<String, dynamic> json) => _$PedometerDTOFromJson(json);
 
   Map<String, dynamic> toJson() => _$PedometerDTOToJson(this);
+
+  @override
+  List<Object?> get props => [
+    startDate,
+    endDate,
+    numberOfSteps,
+    distance,
+    floorsAscended,
+    floorsDescended,
+    currentPace,
+    currentCadence,
+    averageActivePace,
+  ];
 }
