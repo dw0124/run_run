@@ -6,9 +6,11 @@ import 'package:run_run/data/models/pedometer_dto.dart';
 
 class PedometerDataSource {
 
-  PedometerDataSource();
+  final EventChannel _eventChannel;
 
-  final EventChannel _eventChannel = EventChannel('com.example.runRun/pedometer_channel');
+  PedometerDataSource({
+    EventChannel eventChannel = const EventChannel('com.example.runRun/pedometer_channel'),
+  }) : _eventChannel = eventChannel;
 
   final StreamController<PedometerDTO> _controller = StreamController<PedometerDTO>.broadcast();
   StreamSubscription<dynamic>? _subscription;
