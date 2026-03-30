@@ -8,8 +8,12 @@ abstract class WorkoutDataSource {
 }
 
 class HealthKitWorkoutDataSource implements WorkoutDataSource {
+  HealthKitWorkoutDataSource({
+    MethodChannel methodChannel =
+    const MethodChannel('com.example.runRun/workout_channel'),
+  }) : _channel = methodChannel;
 
-  final MethodChannel _channel = MethodChannel('com.example.runRun/workout_channel');
+  final MethodChannel _channel;
 
   @override
   Future<void> saveWorkout(Map<String, dynamic> workout) async {
