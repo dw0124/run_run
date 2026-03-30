@@ -49,14 +49,14 @@ class LocationTrackingRepoImpl implements LocationRepository {
 
   @override
   Future<void> cancel() async {
-    _reset();
+    await _reset();
     await _dataSource.cancel();
   }
 
   @override
   Future<void> dispose() async {
     _dataSource.dispose();
-    _reset();
+    await _reset();
     _streamController.close();
   }
 
