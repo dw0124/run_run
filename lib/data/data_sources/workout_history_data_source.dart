@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:run_run/data/errors/workout_history_exception.dart';
+import 'package:run_run/data/errors/workout_history_exception_mapper.dart';
 import 'package:run_run/shared/result.dart';
 
 abstract class WorkoutHistoryDataSource {
@@ -41,7 +41,7 @@ class HealthKitWorkoutHistoryDataSource implements WorkoutHistoryDataSource {
 
       return Success(workouts);
     } on PlatformException catch (e) {
-      return Failure(_mapException(e));
+      return Failure(e.toWorkoutHistoryException());
     }
   }
 
@@ -57,14 +57,7 @@ class HealthKitWorkoutHistoryDataSource implements WorkoutHistoryDataSource {
 
       return Success((result ?? {}).cast<String, dynamic>());
     } on PlatformException catch (e) {
-      return Failure(_mapException(e));
+      return Failure(e.toWorkoutHistoryException());
     }
   }
-
-  WorkoutHistoryException _mapException(PlatformException e) => switch (e.code) {
-    'NOT_FOUND'     => const WorkoutNotFoundException(),
-    'INVALID_DATE'  => const WorkoutInvalidDateException(),
-    'INVALID_ARGS'  => const WorkoutInvalidArgsException(),
-    _               => WorkoutFetchFailedException(e.message ?? e.code),
-  };
 }
