@@ -91,6 +91,6 @@ class SaveWorkoutUseCase {
   final WorkoutRepository _repo;
 
   Future<void> call() async {
-    _repo.saveWorkout();
+    await _repo.saveWorkout();
   }
 }
