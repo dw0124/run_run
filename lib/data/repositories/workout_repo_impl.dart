@@ -74,6 +74,7 @@ class WorkoutRepoImpl implements WorkoutRepository {
 
   @override
   Future<void> pauseWorkout() async {
+    await saveWorkout();
     await _dataSource.pauseWorkout();
   }
 
