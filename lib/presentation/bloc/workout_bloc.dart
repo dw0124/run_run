@@ -64,7 +64,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
   }
 
   Future<void> _onCancel(WorkoutCancelEvent event, Emitter<WorkoutState> emit) async {
-    _cancelWorkoutUseCase.call();
+    await _cancelWorkoutUseCase.call();
 
     emit(state.copyWith(status: WorkoutStatus.canceled));
   }
