@@ -1,37 +1,47 @@
-//
-//  WorkoutHitsory.swift
-//  Runner
-//
-//  Created by 김두원 on 2/9/26.
-//
+import HealthKit
 
-import Foundation
+struct WorkoutHistory {
+    let id: String
+    let startDate: String
+    let endDate: String
+    let duration: Double
+    let totalDistance: Double
+    let averageRunningSpeed: Double
+    let totalEnergyBurned: Double
 
-struct WorkoutHistory: Codable {
-    let id: UUID           // UUID
-    let startDate: Date
-    let endDate: Date
-    let duration: TimeInterval
-    
-    var totalDistance: Double?      // 미터 단위
-    var averageRunningSpeed: Double?
-    var totalEnergyBurned: Double?  // 칼로리
-    
-    // 상세 조회에서 사용될 Optional 배열
-    var runningSpeedList: [Date: Double]?   // runningSpeed - 페이스 차트용
-    var stepCountList: [Date: Double]?      // stepCount - 케이던스 차트용
-    
-    mutating func copyWith(
-        totalDistance: Double? = nil,
-        averageRunningSpeed: Double? = nil,
-        totalEnergyBurned: Double? = nil,
-        runningSpeedList: [Date: Double]? = nil,
-        stepCountList: [Date: Double]? = nil
-    ) {
-        self.totalDistance = totalDistance ?? self.totalDistance
-        self.averageRunningSpeed = averageRunningSpeed ?? self.averageRunningSpeed
-        self.totalEnergyBurned = totalEnergyBurned ?? self.totalEnergyBurned
-        self.runningSpeedList = runningSpeedList ?? self.runningSpeedList
-        self.stepCountList = stepCountList ?? self.stepCountList
+    init(from workout: HKWorkout) {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        let stats = workout.allStatistics
+
+        let totalDistance = stats[HKQuantityType(.distanceWalkingRunning)]?
+            .sumQuantity()?.doubleValue(for: .meter()) ?? 0.0
+
+        let averageRunningSpeed = stats[HKQuantityType(.runningSpeed)]?
+            .averageQuantity()?.doubleValue(for: HKUnit.meter().unitDivided(by: .second())) ?? 0.0
+
+        let totalEnergyBurned = stats[HKQuantityType(.activeEnergyBurned)]?
+            .sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0.0
+
+        self.id = workout.uuid.uuidString
+        self.startDate = formatter.string(from: workout.startDate)
+        self.endDate = formatter.string(from: workout.endDate)
+        self.duration = workout.duration
+        self.totalDistance = totalDistance
+        self.averageRunningSpeed = averageRunningSpeed
+        self.totalEnergyBurned = totalEnergyBurned
+    }
+
+    func toMap() -> [String: Any] {
+        return [
+            "id": id,
+            "startDate": startDate,
+            "endDate": endDate,
+            "duration": duration,
+            "totalDistance": totalDistance,
+            "averageRunningSpeed": averageRunningSpeed,
+            "totalEnergyBurned": totalEnergyBurned,
+        ]
     }
 }
