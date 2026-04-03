@@ -30,8 +30,8 @@ class HealthKitWorkoutHistoryDataSource implements WorkoutHistoryDataSource {
   }) async {
     try {
       final result = await _channel.invokeMethod<List<dynamic>>('fetchWorkoutList', {
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
+        'startDate': startDate.toUtc().toIso8601String(),
+        'endDate': endDate.toUtc().toIso8601String(),
       });
 
       final workouts = (result ?? [])

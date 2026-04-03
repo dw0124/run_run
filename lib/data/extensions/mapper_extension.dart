@@ -117,6 +117,6 @@ extension WorkoutHistoryRawMapper on Map<String, dynamic> {
 List<WorkoutSample> _mapSamples(dynamic raw) {
   if (raw == null) return [];
   return (raw as List)
-      .map((e) => (e as Map<String, dynamic>).toWorkoutSample())
+      .map((e) => (e as Map<Object?, Object?>).cast<String, dynamic>().toWorkoutSample())
       .toList();
 }
