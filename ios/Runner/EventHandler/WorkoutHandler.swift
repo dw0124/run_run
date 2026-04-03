@@ -172,20 +172,26 @@ class WorkoutHandler {
     }
     
     func fetchWorkoutList(startDate: Date, endDate: Date) async throws -> [HKWorkout] {
+        guard startDate < endDate else {
+            throw WorkoutQueryError.invalidDateRange
+        }
+
         let workoutPredicate = HKQuery.predicateForWorkouts(with: .running)
         let datePredicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutPredicate, datePredicate])
-        
-        // Descriptor 생성
+
         let descriptor = HKSampleQueryDescriptor(
             predicates: [.sample(type: .workoutType(), predicate: compoundPredicate)],
             sortDescriptors: [SortDescriptor(\.startDate, order: .reverse)]
         )
-        
-        // 실행 및 결과 반환
+
         let samples = try await descriptor.result(for: healthStore)
 
-        return samples as? [HKWorkout] ?? []
+        guard let workouts = samples as? [HKWorkout] else {
+            throw WorkoutQueryError.castFailed
+        }
+
+        return workouts
     }
     
     /// WorkoutHistory.id(HKWorkout의 UUID)를 통해 HKWorkout 검색
@@ -197,53 +203,58 @@ class WorkoutHandler {
             sortDescriptors: [SortDescriptor(\.startDate)],
             limit: 1
         )
-        
-        return try await descriptor.result(for: healthStore).first as? HKWorkout
+
+        let samples = try await descriptor.result(for: healthStore)
+
+        guard let first = samples.first else { return nil }
+
+        guard let workout = first as? HKWorkout else {
+            throw WorkoutQueryError.castFailed
+        }
+
+        return workout
     }
     
     
-    func fetchWorkoutDetails(workoutId: UUID) async {
-        do {
-            // UUID로 HKWorkout 객체 찾기
-            guard let workout = try await findWorkout(by: workoutId) else {
-                print("해당 UUID의 운동 기록을 찾을 수 없습니다.")
-                return
-            }
-
-            // 상세 샘플 쿼리 - stepoCount, runningSpeed
-            let predicate = HKQuery.predicateForObjects(from: workout)
-            let runningSpeedType = HKQuantityType.quantityType(forIdentifier: .runningSpeed)!
-            let distanceWalkingRunningType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!
-            let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-            
-            let stepDescriptor = HKSampleQueryDescriptor(
-                predicates: [.quantitySample(type: stepCountType, predicate: predicate)],
-                sortDescriptors: [SortDescriptor(\.startDate)]
-            )
-            
-            let distanceDescriptor = HKSampleQueryDescriptor(
-                predicates: [.quantitySample(type: distanceWalkingRunningType, predicate: predicate)],
-                sortDescriptors: [SortDescriptor(\.startDate)]
-            )
-
-            let speedDescriptor = HKSampleQueryDescriptor(
-                predicates: [.quantitySample(type: runningSpeedType, predicate: predicate)],
-                sortDescriptors: [SortDescriptor(\.startDate)]
-            )
-
-            // 쿼리 실행
-            async let stepResults = stepDescriptor.result(for: healthStore)
-            async let distanceResults = distanceDescriptor.result(for: healthStore)
-            async let speedResults = speedDescriptor.result(for: healthStore)
-            
-            let stepSamples = try await stepResults
-            let distanceSamples = try await distanceResults
-            let speedSamples = try await speedResults
-            
-            print("조회 성공 - 걸음수:\(stepSamples.count)개, 거리:\(distanceSamples.count)개, 속도:\(speedSamples.count)개")
-        } catch {
-            print("WorkoutDetail Query Failed - \(error.localizedDescription)")
+    func fetchWorkoutDetails(workoutId: UUID) async throws -> (
+        stepSamples: [HKQuantitySample],
+        distanceSamples: [HKQuantitySample],
+        speedSamples: [HKQuantitySample]
+    ) {
+        // UUID로 HKWorkout 객체 찾기
+        guard let workout = try await findWorkout(by: workoutId) else {
+            throw WorkoutQueryError.notFound
         }
+
+        // 상세 샘플 쿼리 - stepCount, distanceWalkingRunning, runningSpeed
+        let predicate = HKQuery.predicateForObjects(from: workout)
+        let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let distanceWalkingRunningType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!
+        let runningSpeedType = HKQuantityType.quantityType(forIdentifier: .runningSpeed)!
+
+        let stepDescriptor = HKSampleQueryDescriptor(
+            predicates: [.quantitySample(type: stepCountType, predicate: predicate)],
+            sortDescriptors: [SortDescriptor(\.startDate)]
+        )
+        let distanceDescriptor = HKSampleQueryDescriptor(
+            predicates: [.quantitySample(type: distanceWalkingRunningType, predicate: predicate)],
+            sortDescriptors: [SortDescriptor(\.startDate)]
+        )
+        let speedDescriptor = HKSampleQueryDescriptor(
+            predicates: [.quantitySample(type: runningSpeedType, predicate: predicate)],
+            sortDescriptors: [SortDescriptor(\.startDate)]
+        )
+
+        // 쿼리 실행
+        async let stepResults = stepDescriptor.result(for: healthStore)
+        async let distanceResults = distanceDescriptor.result(for: healthStore)
+        async let speedResults = speedDescriptor.result(for: healthStore)
+
+        return (
+            stepSamples: try await stepResults,
+            distanceSamples: try await distanceResults,
+            speedSamples: try await speedResults
+        )
     }
     
     /// workoutBuilder, workoutRouteBuilder를 nil로 초기화
@@ -251,4 +262,10 @@ class WorkoutHandler {
         workoutBuilder = nil
         workoutRouteBuilder = nil
     }
+}
+
+enum WorkoutQueryError: Error {
+    case notFound
+    case invalidDateRange
+    case castFailed
 }
